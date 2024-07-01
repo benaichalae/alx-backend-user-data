@@ -3,6 +3,7 @@
 """
 from flask import jsonify, abort
 from api.v1.views import app_views
+from models.user import User  # Moved import statement
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
@@ -38,7 +39,6 @@ def stats() -> str:
     Return:
       - the number of each objects
     """
-    from models.user import User
     stats = {}
     stats['users'] = User.count()
     return jsonify(stats)

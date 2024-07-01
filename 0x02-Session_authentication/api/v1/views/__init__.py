@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Defines the blueprint for API version 1 routes.
+""" DocDocDocDocDocDoc
 """
 from flask import Blueprint
 
