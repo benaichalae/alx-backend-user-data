@@ -1,38 +1,34 @@
 #!/usr/bin/env python3
 """Authentication module for the API.
 """
-from typing import List, TypeVar, Optional
+from typing import List, TypeVar
 from flask import request
-import re
 
 
 class Auth:
-    """Authentication class.
-    """
-    def require_auth(self, path: Optional[str], excluded_paths: Optional[List[str]]) -> bool:
-        """Checks if a path requires authentication.
-        """
+    """Class to manage API authentication"""
+
+    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
+        """Returns True if the path is not in the list of excluded_paths"""
         if not path or not excluded_paths:
             return True
 
-        path = path.rstrip('/')
-        for exclusion_path in map(lambda x: x.rstrip('/'), excluded_paths):
-            if exclusion_path.endswith('*'):
-                if path.startswith(exclusion_path[:-1]):
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith('*'):
+                prefix = excluded_path[:-1]
+                if path.startswith(prefix):
                     return False
-            elif exclusion_path == path:
+            elif path.rstrip('/') == excluded_path.rstrip('/'):
                 return False
 
         return True
 
-    def authorization_header(self, request: Optional[request] = None) -> Optional[str]:
-        """Gets the authorization header field from the request.
-        """
-        if request is None:
-            return None
-        return request.headers.get('Authorization')
+    def authorization_header(self, request=None) -> str:
+        """Returns the Authorization header value from the request"""
+        if request:
+            return request.headers.get("Authorization", None)
+        return None
 
-    def current_user(self, request: Optional[request] = None) -> Optional[TypeVar('User')]:
-        """Gets the current user from the request.
-        """
+    def current_user(self, request=None) -> TypeVar('User'):
+        """Returns None"""
         return None
